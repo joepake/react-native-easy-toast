@@ -32,16 +32,18 @@ export default class Toast extends Component {
         this.state = {
             isShow: false,
             text: '',
+            style: {},
             opacityValue: new Animated.Value(this.props.opacity),
         }
     }
 
-    show(text, duration, callback) {
+    show(text, duration, style, callback) {
         this.duration = typeof duration === 'number' ? duration : DURATION.LENGTH_SHORT;
         this.callback = callback;
         this.setState({
             isShow: true,
             text: text,
+            style
         });
 
         this.animation = Animated.timing(
@@ -109,7 +111,7 @@ export default class Toast extends Component {
                 pointerEvents="none"
             >
                 <Animated.View
-                    style={[styles.content, { opacity: this.state.opacityValue }, this.props.style]}
+                    style={[styles.content, { opacity: this.state.opacityValue }, this.state.style]}
                 >
                     {React.isValidElement(this.state.text) ? this.state.text : <Text style={this.props.textStyle}>{this.state.text}</Text>}
                 </Animated.View>
