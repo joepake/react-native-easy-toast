@@ -9,7 +9,7 @@ declare module "react-native-easy-toast" {
     show: (
       text: string | ReactNode,
       duration?: number,
-      style?: Object,
+      color?: string,
       callback?: (() => void)
     ) => void;
     close: (duration?: number) => void;
