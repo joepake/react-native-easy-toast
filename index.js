@@ -6,17 +6,10 @@
  * @flow
  */
 
-import React, {Component} from 'react';
-import {
-    StyleSheet,
-    View,
-    Animated,
-    Dimensions,
-    Text,
-    ViewPropTypes as RNViewPropTypes,
-} from 'react-native'
-
 import PropTypes from 'prop-types';
+import React, { Component } from 'react';
+import { Animated, Dimensions, Modal, StyleSheet, Text, View, ViewPropTypes as RNViewPropTypes } from 'react-native';
+
 const ViewPropTypes = RNViewPropTypes || View.propTypes;
 export const DURATION = { 
     LENGTH_SHORT: 500,
@@ -104,16 +97,21 @@ export default class Toast extends Component {
         }
 
         const view = this.state.isShow ?
-            <View
-                style={[styles.container, { top: pos }]}
-                pointerEvents="none"
+              <Modal
+                visible={this.state.isShow}
+                transparent
             >
-                <Animated.View
-                    style={[styles.content, { opacity: this.state.opacityValue }, this.props.style]}
+                <View
+                    style={[styles.container, { top: pos }]}
+                    pointerEvents="none"
                 >
-                    {React.isValidElement(this.state.text) ? this.state.text : <Text style={this.props.textStyle}>{this.state.text}</Text>}
-                </Animated.View>
-            </View> : null;
+                    <Animated.View
+                        style={[styles.content, { opacity: this.state.opacityValue }, this.props.style]}
+                    >
+                        {React.isValidElement(this.state.text) ? this.state.text : <Text style={this.props.textStyle}>{this.state.text}</Text>}
+                    </Animated.View>
+                </View>
+            </Modal>: null;
         return view;
     }
 }
