@@ -11,12 +11,12 @@ import React, { Component } from 'react';
 import { Animated, Dimensions, Modal, StyleSheet, Text, View, ViewPropTypes as RNViewPropTypes } from 'react-native';
 
 const ViewPropTypes = RNViewPropTypes || View.propTypes;
-export const DURATION = { 
+export const DURATION = {
     LENGTH_SHORT: 500,
     FOREVER: 0,
 };
 
-const {height, width} = Dimensions.get('window');
+const { height, width } = Dimensions.get('window');
 
 export default class Toast extends Component {
 
@@ -25,16 +25,18 @@ export default class Toast extends Component {
         this.state = {
             isShow: false,
             text: '',
+            backgroundColor: 'black',
             opacityValue: new Animated.Value(this.props.opacity),
         }
     }
 
-    show(text, duration, callback) {
+    show(text, duration, backgroundColor, callback) {
         this.duration = typeof duration === 'number' ? duration : DURATION.LENGTH_SHORT;
         this.callback = callback;
         this.setState({
             isShow: true,
             text: text,
+            backgroundColor
         });
 
         this.animation = Animated.timing(
@@ -46,14 +48,14 @@ export default class Toast extends Component {
         )
         this.animation.start(() => {
             this.isShow = true;
-            if(duration !== DURATION.FOREVER) this.close();
+            if (duration !== DURATION.FOREVER) this.close();
         });
     }
 
-    close( duration ) {
+    close(duration) {
         let delay = typeof duration === 'undefined' ? this.duration : duration;
 
-        if(delay === DURATION.FOREVER) delay = this.props.defaultCloseDelay || 250;
+        if (delay === DURATION.FOREVER) delay = this.props.defaultCloseDelay || 250;
 
         if (!this.isShow && !this.state.isShow) return;
         this.timer && clearTimeout(this.timer);
@@ -70,7 +72,7 @@ export default class Toast extends Component {
                     isShow: false,
                 });
                 this.isShow = false;
-                if(typeof this.callback === 'function') {
+                if (typeof this.callback === 'function') {
                     this.callback();
                 }
             });
@@ -97,21 +99,19 @@ export default class Toast extends Component {
         }
 
         const view = this.state.isShow ?
-              <Modal
+            <Modal
                 visible={this.state.isShow}
-                transparent
-            >
+                transparent>
                 <View
                     style={[styles.container, { top: pos }]}
-                    pointerEvents="none"
-                >
+                    pointerEvents="none">
                     <Animated.View
-                        style={[styles.content, { opacity: this.state.opacityValue }, this.props.style]}
+                        style={[styles.content, { opacity: this.state.opacityValue, backgroundColor: this.state.backgroundColor }, this.props.style]}
                     >
                         {React.isValidElement(this.state.text) ? this.state.text : <Text style={this.props.textStyle}>{this.state.text}</Text>}
                     </Animated.View>
                 </View>
-            </Modal>: null;
+            </Modal> : null;
         return view;
     }
 }
@@ -143,10 +143,10 @@ Toast.propTypes = {
         'bottom',
     ]),
     textStyle: Text.propTypes.style,
-    positionValue:PropTypes.number,
-    fadeInDuration:PropTypes.number,
-    fadeOutDuration:PropTypes.number,
-    opacity:PropTypes.number
+    positionValue: PropTypes.number,
+    fadeInDuration: PropTypes.number,
+    fadeOutDuration: PropTypes.number,
+    opacity: PropTypes.number
 }
 
 Toast.defaultProps = {
